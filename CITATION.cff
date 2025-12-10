@@ -1,0 +1,31 @@
+# This CITATION.cff file was generated with cffinit.
+# Visit https://bit.ly/cffinit to generate yours today!
+
+cff-version: 1.2.0
+title: MIICE
+message: >-
+  If you use this software, please cite it using the
+  metadata from this file.
+type: software
+authors:
+  - given-names: Jenna
+    family-names: Tomkinson
+    email: jenna.tomkinson@cuanschutz.edu
+    orcid: 'https://orcid.org/0000-0003-2676-5813'
+    affiliation: University of Colorado Anschutz
+  - given-names: Gregory
+    family-names: Way
+    email: gregory.way@cuanschutz.edu
+    affiliation: University of Colorado Anschutz
+    orcid: 'https://orcid.org/0000-0002-0503-9348'
+repository-code: 'https://github.com/WayScience/MIICE'
+abstract: >-
+  MIICE is a software that quantifies illumination errors
+  and contrast in fluorescence microscopy image sets.
+keywords:
+  - python
+  - microscopy
+  - illumination
+  - contrast
+  - evaluation
+license: BSD-3-Clause
