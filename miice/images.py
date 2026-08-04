@@ -1,23 +1,21 @@
 """Module for matching individual images from raw and corrected directories
 and computing intensity slopes from the foreground and background regions."""
 
+import logging
 import warnings
-
+from collections.abc import Callable, Iterable
 from pathlib import Path
 
 import matplotlib.pyplot as plt
 import numpy as np
 
-from typing import Callable, Iterable, List, Optional, Set, Tuple, Union, Dict
-import logging
-
 # Set up aliases for type hints
-PathLike = Union[str, Path]
+PathLike = str | Path
 KeyFunc = Callable[[str], str]
 
 logger = logging.getLogger(__name__)
 
-def _normalize_extensions(exts: Optional[Union[str, Iterable[str]]]) -> Set[str]:
+def _normalize_extensions(exts: str | Iterable[str] | None) -> set[str]:
     """
     Normalize an extension string or iterable of extensions into a set of
     lowercase strings that start with a dot (e.g. '.tif', '.tiff').
@@ -32,7 +30,7 @@ def _normalize_extensions(exts: Optional[Union[str, Iterable[str]]]) -> Set[str]
 
     Returns
     -------
-    Set[str]
+    set[str]
         A set of normalized extension strings: lowercase and starting with a dot.
         If `exts` is None or if normalization yields no valid entries, returns
         the default set {'.tif', '.tiff'}.
@@ -47,7 +45,7 @@ def _normalize_extensions(exts: Optional[Union[str, Iterable[str]]]) -> Set[str]
         return default
     if isinstance(exts, str):
         exts = [exts]
-    normalized: Set[str] = set()
+    normalized: set[str] = set()
     for e in exts:
         if not isinstance(e, str):
             raise TypeError("extension entries must be str")
@@ -93,11 +91,11 @@ def match_image_pairs(
     raw_dir: PathLike,
     corrected_dir: PathLike,
     key_parts: int = 4,
-    extensions: Optional[Union[str, Iterable[str]]] = None,
-    key_func: Optional[KeyFunc] = None,
+    extensions: str | Iterable[str] | None = None,
+    key_func: KeyFunc | None = None,
     *,
     return_unmatched: bool = False,
-) -> Union[List[Tuple[Path, Path]], Tuple[List[Tuple[Path, Path]], List[Path], List[Path]]]:
+) -> list[tuple[Path, Path]] | tuple[list[tuple[Path, Path]], list[Path], list[Path]]:
     """
     Match images from two directories based on a common key in their filenames.
 
@@ -198,7 +196,7 @@ def match_image_pairs(
     # Return list of matched pairs
     return pairs
 
-def _compute_region_slopes(region: np.ndarray) -> Tuple[np.ndarray, np.ndarray, float, float, float]:
+def _compute_region_slopes(region: np.ndarray) -> tuple[np.ndarray, np.ndarray, float, float, float]:
     """
     Compute row- and column-wise average intensities and linear slopes for a region.
 
@@ -245,7 +243,7 @@ def _compute_region_slopes(region: np.ndarray) -> Tuple[np.ndarray, np.ndarray, 
 
     return avg_row, avg_col, row_slope, col_slope, magnitude
 
-def compute_intensity_slopes(image: np.ndarray, mask: np.ndarray) -> Tuple[float, float, Dict[str, np.ndarray]]:
+def compute_intensity_slopes(image: np.ndarray, mask: np.ndarray) -> tuple[float, float, dict[str, np.ndarray]]:
     """
     Compute row- and column-wise intensity slopes for foreground and background.
     Returns foreground & background slope magnitudes and a dictionary for plotting.
@@ -277,7 +275,7 @@ def compute_intensity_slopes(image: np.ndarray, mask: np.ndarray) -> Tuple[float
     return fg_mag, bg_mag, results
 
 
-def plot_intensity_slopes(results: Dict[str, np.ndarray], save_path: Optional[Path] = None) -> None:
+def plot_intensity_slopes(results: dict[str, np.ndarray], save_path: Path | None = None) -> None:
     """
     Plot row- and column-wise intensity slopes along with the average intensities per row and column.
 
@@ -363,4 +361,3 @@ def plot_intensity_slopes(results: Dict[str, np.ndarray], save_path: Optional[Pa
         plt.close(fig)
     else:
         plt.show()
-
